@@ -17,9 +17,10 @@ class CreateTblPenjualansTable extends Migration {
 			$table->increments('id');
 			$table->integer('id_user')->unsigned()->nullable()->index('id_user');
 			$table->integer('id_outlet')->unsigned()->nullable()->index('id_outlet');
-			$table->date('tgl_penjualan');
-			$table->integer('total');
-			$table->integer('bayar');
+			$table->date('tgl_penjualan')->nullable();
+			$table->integer('total')->nullable();
+			$table->integer('bayar')->nullable();
+			$table->integer('kembalian')->nullable();
 			$table->timestamps();
 		});
 	}

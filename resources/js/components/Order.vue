@@ -1,200 +1,92 @@
 <template>
-  <div class="container">
-    <!-- view table cari produk -->
-    <div class="col-12">
-      <div class="card">
-        <div class="card-header">
-          <h3 class="card-title">Detail Produk</h3>
-
-          <div class="card-tools">
-            <div
-              class="input-group input-group-sm"
-              @keyup.enter="searchDetail()"
-              style="width: 150px;"
-            >
-              <input
-                v-model="search"
-                type="search"
-                name="search"
-                class="form-control float-right"
-                placeholder="Search"
-              >
-              <div class="input-group-append">
-                <button type="submit" class="btn btn-default">
-                  <i class="fa fa-search"></i>
-                </button>
-              </div>
-            </div>
+  <div class="content-wrapper" style="min-height: 1115.31px;">
+    <section class="content-header">
+      <div class="container-fluid">
+        <div class="row mb-2">
+          <div class="col-sm-6">
+            <h1></h1>
           </div>
         </div>
-        <!-- /.card-header -->
-        <div class="card-body table-responsive p-0">
-          <table class="table table-hover">
-            <tbody>
-              <tr>
-                <th>Nama</th>
-                <th>Harga</th>
-                <th>Modify</th>
-              </tr>
-              <tr v-for="Produk in produk.data" :key="Produk.id">
-                <td>{{Produk.nama_produk}}</td>
-                <td>{{Produk.harga_produk}}</td>
-
-                <td>{{Produk.created_at}}</td>
-
-                <td>
-                  <button
-                    href="#"
-                    @click="createDetailOrder()"
-                    type="button"
-                    class="btn btn-success btn-sm"
+      </div>
+      <!-- /.container-fluid -->
+    </section>
+    <section class="content">
+      <div class="container-fluid">
+        <!-- view table cari produk -->
+        <div class="col-12">
+          <!-- /.card -->
+          <div class="card">
+            <!-- /.card-header -->
+            <div class="card-header bg-dark">
+              <h3 class="card-title">Daftar Transaksi</h3>
+              <div class="card-tools">
+                <div
+                  class="input-group input-group-sm"
+                  @keyup.enter="searchDetail()"
+                  style="width: 150px;"
+                >
+                  <input
+                    v-model="search"
+                    type="search"
+                    name="search"
+                    class="form-control float-right"
+                    placeholder="Search"
                   >
-                    <i class="fa fa-edit"></i>
-                  </button>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-          <!-- /.card-body -->
+                  <div class="input-group-append">
+                    <button type="submit" class="btn btn-default navbar-teal">
+                      <i class="fa fa-search"></i>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- /.card-header -->
+            <div class="card-body table-responsive p-0">
+              <table class="table table-hover">
+                <tbody>
+                  <tr>
+                    <th>ID Transaksi</th>
+                    <th>ID Karyawan</th>
+                    <th>Tanggal Transaksi</th>
+                    <th>Cabang</th>
+                    <th>Total</th>
+                    <th>Bayar</th>
+                    <th>Kembalian</th>
+                    <th>Modify</th>
+                  </tr>
+
+                  <tr v-for="Order in penjualan" :key="Order.id">
+                    <td>{{Order.id}}</td>
+                    <td>{{Order.id_user}}</td>
+                    <td>{{Order.tgl_penjualan}}</td>
+                    <td>{{Order.nama_outlet}}</td>
+                    <td>{{Order.total}}</td>
+                    <td>{{Order.bayar}}</td>
+                    <td>{{Order.kembalian}}</td>
+                    <td>
+                      <a href="#">Detail</a>
+                      <a href="#" @click="deleteOrder(Order.id)">
+                        <i class="fa fa-trash"></i>
+                      </a>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <!-- /.card-body -->
+          </div>
           <!-- /.card -->
         </div>
 
-        <!-- /.card-body -->
+        <!-- modal tambah data -->
+
+        <!-- button modal -->
+        <router-link to="/order_tambah" class="nav-link float-right">
+          <button type="button" class="btn btn-primary" @click="tambahTransaksi()">Tambah Data</button>
+        </router-link>
       </div>
-      <!-- /.card -->
-    </div>
-
-    <!-- view table cari produk -->
-    <div class="col-12">
-      <div class="card">
-        <div class="card-header">
-          <h3 class="card-title">Detail Penjualan</h3>
-        </div>
-        <!-- /.card-header -->
-        <div class="card-body table-responsive p-0">
-          <table class="table table-hover">
-            <tbody>
-              <tr>
-                <th>Nama Produk</th>
-                <th style="width:100px">Jumlah Produk</th>
-                <th>Harga Satuan</th>
-                <th>Sub Total</th>
-              </tr>
-
-              <tr v-for="Order in detail_penjualan" :key="Order.id">
-                <td>{{Order.nama_produk}}</td>
-                <td>
-                  <div class="form-group">
-                    <input
-                      v-model="form.jumlah_barang "
-                      type="number"
-                      min="1"
-                      placeholder="1"
-                      name="jumlah_barang"
-                      class="form-control"
-                      :class="{ 'is-invalid': form.errors.has('jumlah_barang') }"
-                    >
-                    <has-error :form="form" field="jumlah_barang"></has-error>
-                  </div>
-                </td>
-                <td>{{Order.harga_produk}}</td>
-                <td>{{form.jumlah_barang*Order.harga_produk}}</td>
-                <td>{{Order.kembalian}}</td>
-                <td>
-                  <button
-                    href="#"
-                    @click="editOrder(Order)"
-                    type="button"
-                    class="btn btn-success btn-sm"
-                  >
-                    <i class="fa fa-edit"></i>
-                  </button>
-                  <button
-                    href="#"
-                    @click="deleteOrder(Order.id)"
-                    type="button"
-                    class="btn btn-danger btn-sm"
-                  >
-                    <i class="fa fa-trash"></i>
-                  </button>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-
-        <!-- /.card-body -->
-      </div>
-      <!-- /.card -->
-    </div>
-
-    <!-- modal tambah data -->
-    <div
-      class="modal fade"
-      id="newModal"
-      tabindex="-1"
-      role="dialog"
-      aria-labelledby="addNew"
-      aria-hidden="true"
-    >
-      <div class="modal-dialog" role="document">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" v-show="!editmode" id="addNew">Data Outlet Baru</h5>
-            <h5 class="modal-title" v-show="editmode" id="addNew">Ubah Data Outlet</h5>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-              <span aria-hidden="true">&times;</span>
-            </button>
-          </div>
-          <form @submit.prevent="editmode ? updateOrder() : createOrder()">
-            <div class="modal-body">
-              <div class="form-group">
-                <input
-                  v-model="form.nama_outlet"
-                  type="text"
-                  name="nama_outlet"
-                  placeholder="Masukan Nama Outlet"
-                  class="form-control"
-                  :class="{ 'is-invalid': form.errors.has('nama_outlet') }"
-                >
-                <has-error :form="form" field="nama_outlet"></has-error>
-              </div>
-              <div class="form-group">
-                <textarea
-                  v-model="form.alamat_outlet"
-                  type="text"
-                  name="alamat_outlet"
-                  placeholder="Masukan Alamat"
-                  class="form-control"
-                  :class="{ 'is-invalid': form.errors.has('alamat_outlet') }"
-                ></textarea>
-                <has-error :form="form" field="alamat_outlet"></has-error>
-              </div>
-              <div class="form-group">
-                <input
-                  v-model="form.telp_outlet"
-                  type="text"
-                  name="telp_outlet"
-                  placeholder="Masukan Nomor Telepon"
-                  class="form-control"
-                  :class="{ 'is-invalid': form.errors.has('telp_outlet') }"
-                >
-                <has-error :form="form" field="telp_outlet"></has-error>
-              </div>
-            </div>
-
-            <div class="modal-footer">
-              <button type="button" class="btn btn-danger" data-dismiss="modal">Tutup</button>
-              <button v-show="editmode" type="submit" class="btn btn-success">Perbaru</button>
-              <button v-show="!editmode" type="submit" class="btn btn-success">Simpan</button>
-            </div>
-          </form>
-        </div>
-      </div>
-    </div>
-
-    <!-- button modal -->
-    <button type="button" class="btn btn-primary" @click="newModal()">Tambah Data</button>
+    </section>
   </div>
 </template>
 
@@ -202,18 +94,16 @@
 export default {
   data() {
     return {
-      editmode: false,
-      produk: {},
-      jenisBarang: {},
-      detail_penjualan: {},
+      nama_outlet: {},
+      penjualan: {},
       search: "",
       form: new Form({
         id: "",
-        nama_produk: "",
-        id_jenisBarang: "",
-        jumlah_barang: "",
-        harga_produk: "",
-        sub_total: "",
+        id_user: "",
+        id_outlet: "",
+        tgl_penjualan: "",
+        total: "",
+        bayar: "",
         kembalian: ""
       })
     };
@@ -221,79 +111,25 @@ export default {
   methods: {
     loadOrder() {
       axios
-        .get("api/detail_penjualan")
-        .then(({ data }) => (this.detail_penjualan = data.sub_total));
+        .get("api/tampil_detail_penjualan ")
+        .then(({ data }) => (this.penjualan = data.detail_penjualan));
     },
+
     searchDetail() {
       let query = this.search;
       axios
         .get("api/cariProduk?q=" + query)
         .then(data => {
-          this.produk = data.data;
+          this.penjualan = data.data;
         })
         .catch(() => {});
     },
     loadProduk() {
       axios
-        .get("api/produk")
-        .then(({ data }) => (this.produk = data.nama_produk));
+        .get("api/outlet")
+        .then(({ data }) => (this.nama_outlet = data.outlet));
     },
-    createOrder() {
-      this.$Progress.start();
-      this.form
-        .post("api/detail_penjualan")
-        .then(() => {
-          Fire.$emit("AferCreate");
-          $("#newModal").modal("hide");
-          toast.fire({
-            type: "success",
-            title: "Data Berhasil Disimpan"
-          });
-          this.$Progress.finish();
-        })
-        .catch(() => {});
-    },
-    createDetailOrder() {
-      this.$Progress.start();
-      this.produk
-        .post("api/detail_penjualan")
-        .then(() => {
-          Fire.$emit("AferCreate");
-          toast.fire({
-            type: "success",
-            title: "Data Berhasil Disimpan"
-          });
-          this.$Progress.finish();
-        })
-        .catch(() => {});
-    },
-    newModal() {
-      this.editmode = false;
-      this.form.reset();
-      $("#newModal").modal("show");
-    },
-    updateOrder() {
-      this.$Progress.start();
-      //console.log("edit data");
-      this.form
-        .put("api/detail_penjualan/" + this.form.id)
-        .then(() => {
-          // success
-          Fire.$emit("AfterCreate");
-          $("#newModal").modal("hide");
-          swal.fire("Updated!", "Info telah terupdate.", "success");
-          this.$Progress.finish();
-        })
-        .catch(() => {
-          this.$Progress.fail();
-        });
-    },
-    editOrder(Order) {
-      this.editmode = true;
-      this.form.reset();
-      $("#newModal").modal("show");
-      this.form.fill(Order);
-    },
+
     deleteOrder(id) {
       swal
         .fire({
@@ -309,7 +145,7 @@ export default {
           // send request to the server
           if (result.value) {
             this.form
-              .delete("api/detail_penjualan/" + id)
+              .delete("api/penjualan/" + id)
               .then(() => {
                 swal.fire("deleted", "data anda terhapus", "success");
                 Fire.$emit("AfterCreate");
@@ -325,6 +161,7 @@ export default {
     Fire.$on("searching", () => {});
     this.loadOrder();
     this.loadProduk();
+
     //setInterval(() => this.loadOutlet(), 3000);
     Fire.$on("AfterCreate", () => {
       this.loadOrder();

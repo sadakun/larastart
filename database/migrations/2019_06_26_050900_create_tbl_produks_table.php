@@ -18,7 +18,7 @@ class CreateTblProduksTable extends Migration {
 			$table->integer('id_jenisBarang')->unsigned()->nullable()->index('id_jenisBarang');
 			$table->string('nama_produk', 191)->nullable();
 			$table->integer('harga_produk')->nullable();
-			$table->string('gambar_produk', 191);
+			$table->string('gambar_produk', 191)->nullable()->default('profile.png');
 			$table->timestamps();
 		});
 	}

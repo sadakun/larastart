@@ -29532,7 +29532,36 @@ readers do not read off random characters that represent icons */
 }
 
 .navbar-laravel {
-  background-color: #fff;
+  background-color: white;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
+}
+
+.router-link-exact-active {
+  background-color: #e67e22;
+  color: #ffffff !important;
+}
+
+.navbar-orange {
+  background-color: #fd7e14;
+}
+
+.navbar-cyan {
+  background-color: #17a2b8;
+  color: #ffffff !important;
+}
+
+.navbar-dark {
+  background-color: #343a40;
+  color: #ffffff !important;
+}
+
+.navbar-teal {
+  background-color: #50d8af;
+  color: #0c2e8a !important;
+}
+
+.navbar-blue {
+  background-color: #0c2e8a;
+  color: #ffffff !important;
 }
 

@@ -19,9 +19,10 @@ class CreateTblDetailPenjualansTable extends Migration {
 			$table->integer('id_produk')->unsigned()->nullable()->index('id_produk');
 			$table->integer('id_jenisBarang')->unsigned()->nullable()->index('id_jenisBarang');
 			$table->integer('sub_total');
+			$table->integer('harga_lama');
+			$table->integer('diskon');
 			$table->integer('jumlah_barang')->nullable();
 			$table->timestamps();
-			$table->integer('kembalian');
 		});
 	}
 

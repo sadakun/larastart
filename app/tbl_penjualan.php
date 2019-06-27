@@ -10,6 +10,7 @@ class tbl_penjualan extends Model
     use Notifiable;
 
     protected $fillable = [
+        'id',
         'tgl_penjualan',
         'total',
         'bayar'

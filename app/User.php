@@ -6,18 +6,23 @@ use Illuminate\Notifications\Notifiable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Laravel\Passport\HasApiTokens;
+use Illuminate\Database\Eloquent\Model;
+use Sofa\Eloquence\Eloquence;
 
 class User extends Authenticatable
 {
-    use Notifiable, HasApiTokens;
+    use Notifiable, HasApiTokens, Eloquence;
 
     /**
      * The attributes that are mass assignable.
      *
      * @var array
      */
+    public $searchableColumns = [
+        'name', 'country', 'city', 'IATA', 'ICAO', 'FAA'
+    ];
     protected $fillable = [
-        'name', 'email', 'password','photo', 'alamat', 'role', 'no_telp'
+        'name', 'email', 'password', 'photo', 'alamat', 'role', 'no_telp'
     ];
 
     /**

@@ -1,156 +1,187 @@
 <template>
-  <div class="container">
-    <!-- view table -->
-    <div class="col-12">
-      <div class="card">
-        <div class="card-header">
-          <h3 class="card-title">Produk Sukses Aquarium</h3>
+  <div class="content-wrapper" style="min-height: 1115.31px;">
+    <section class="content-header">
+      <div class="container-fluid">
+        <div class="row mb-2">
+          <div class="col-sm-6">
+            <h1></h1>
+          </div>
+        </div>
+      </div>
+      <!-- /.container-fluid -->
+    </section>
+    <section class="content">
+      <div class="container-fluid">
+        <!-- view table -->
+        <div class="col-12">
+          <div class="card">
+            <div class="card-header bg-dark">
+              <h3 class="card-title">Daftar Produk</h3>
 
-          <div class="card-tools">
-            <div class="input-group input-group-sm" style="width: 150px;">
-              <input
-                type="text"
-                name="table_search"
-                class="form-control float-right"
-                placeholder="Search"
-              >
-              <div class="input-group-append">
-                <button type="submit" class="btn btn-default">
-                  <i class="fa fa-search"></i>
+              <div class="card-tools">
+                <div class="input-group input-group-sm" style="width: 150px;">
+                  <input
+                    type="text"
+                    name="table_search"
+                    class="form-control float-right"
+                    placeholder="Search"
+                  >
+                  <div class="input-group-append">
+                    <button type="submit" class="btn btn-default navbar-teal">
+                      <i class="fa fa-search"></i>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- /.card-header -->
+            <div class="card-body table-responsive p-0">
+              <table class="table table-hover">
+                <tbody>
+                  <tr>
+                    <th>No</th>
+                    <th>Nama</th>
+                    <th>Kategori</th>
+                    <th>Harga</th>
+                    <th>Gambar</th>
+                    <th>Diperbarui</th>
+                    <th>Modify</th>
+                  </tr>
+
+                  <tr v-for="Produk in produk" :key="Produk.id">
+                    <td>{{Produk.id}}</td>
+                    <td>{{Produk.nama_produk}}</td>
+                    <td>{{Produk.jenisBarang}}</td>
+                    <td>{{Produk.harga_produk}}</td>
+                    <td>
+                      <img
+                        class="profile-user-img img-fluid"
+                        :src="'img/product/'+Produk.gambar_produk"
+                        alt="Gambar Produk"
+                      >
+                    </td>
+                    <td>{{Produk.created_at}}</td>
+
+                    <td>
+                      <button
+                        href="#"
+                        @click="editProduk(Produk)"
+                        type="button"
+                        class="btn btn-success btn-sm"
+                      >
+                        <i class="fa fa-edit"></i>
+                      </button>
+                      <button
+                        href="#"
+                        @click="deleteProduk(Produk.id)"
+                        type="button"
+                        class="btn btn-danger btn-sm"
+                      >
+                        <i class="fa fa-trash"></i>
+                      </button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+              <!-- /.card-body -->
+              <!-- /.card -->
+            </div>
+            <!-- Modal new -->
+          </div>
+        </div>
+        <!-- Button trigger modal -->
+        <button type="button" class="btn btn-primary" @click="newModal()">Tambah Data</button>
+
+        <!-- Modal -->
+        <div
+          class="modal fade"
+          id="newModal"
+          tabindex="-1"
+          role="dialog"
+          aria-labelledby="addNew"
+          aria-hidden="true"
+        >
+          <div class="modal-dialog" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" v-show="!editmode" id="addNew">Data Produk Baru</h5>
+                <h5 class="modal-title" v-show="editmode" id="addNew">Ubah Data Produk</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
                 </button>
               </div>
+              <form @submit.prevent="editmode ? updateProduk() : createProduk()">
+                <div class="modal-body">
+                  <div class="form-group">
+                    <label>Nama Produk</label>
+                    <input
+                      v-model="form.nama_produk"
+                      type="text"
+                      name="nama_produk"
+                      placeholder="Masukan Nama Produk"
+                      class="form-control"
+                      :class="{ 'is-invalid': form.errors.has('nama_produk') }"
+                    >
+                    <has-error :form="form" field="nama_produk"></has-error>
+                  </div>
+
+                  <div class="form-group">
+                    <label>Kategori</label>
+                    <select
+                      v-model="form.id_jenisBarang"
+                      type="id_jenisBarang"
+                      name="id_jenisBarang"
+                      placeholder="Pilih Jenis barang"
+                      class="form-control"
+                      :class="{ 'is-invalid': form.errors.has('id_jenisBarang') }"
+                    >
+                      <option value disabled selected>Pilih jenis barang</option>
+                      <option
+                        :value="jenis.id"
+                        v-for="jenis in jenisBarang"
+                        :key="jenis.id"
+                      >{{jenis.jenisBarang}}</option>
+                      <has-error :form="form" field="id_jenisBarang"></has-error>
+                    </select>
+                  </div>
+
+                  <div class="form-group">
+                    <label>Harga</label>
+                    <input
+                      v-model="form.harga_produk"
+                      type="harga_produk"
+                      name="harga_produk"
+                      placeholder="Masukan Harga Produk"
+                      class="form-control"
+                      :class="{ 'is-invalid': form.errors.has('harga_produk') }"
+                    >
+                    <has-error :form="form" field="harga_produk"></has-error>
+                  </div>
+                  <div class="form-group">
+                    <label for="gambar_produk" class="col-sm-2 control-label">Gambar Produk</label>
+                    <div class="col-sm-12">
+                      <input
+                        type="file"
+                        @change="updateGambar"
+                        name="gambar_produk"
+                        class="form-input"
+                      >
+                    </div>
+                  </div>
+                </div>
+
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-danger" data-dismiss="modal">Tutup</button>
+                  <button v-show="editmode" type="submit" class="btn btn-success">Perbaru</button>
+                  <button v-show="!editmode" type="submit" class="btn btn-success">Simpan</button>
+                </div>
+              </form>
             </div>
           </div>
         </div>
-
-        <!-- /.card-header -->
-        <div class="card-body table-responsive p-0">
-          <table class="table table-hover">
-            <tbody>
-              <tr>
-                <th>No</th>
-                <th>Nama</th>
-                <th>Kategori</th>
-                <th>Harga</th>
-                <th>Gambar</th>
-                <th>Diperbarui</th>
-                <th>Modify</th>
-              </tr>
-
-              <tr v-for="Produk in produk" :key="Produk.id">
-                <td>{{Produk.id}}</td>
-                <td>{{Produk.nama_produk}}</td>
-                <td>{{Produk.jenisBarang}}</td>
-                <td>{{Produk.harga_produk}}</td>
-
-                <td>{{Produk.created_at}}</td>
-
-                <td>
-                  <button
-                    href="#"
-                    @click="editProduk(Produk)"
-                    type="button"
-                    class="btn btn-success btn-sm"
-                  >
-                    <i class="fa fa-edit"></i>
-                  </button>
-                  <button
-                    href="#"
-                    @click="deleteProduk(Produk.id)"
-                    type="button"
-                    class="btn btn-danger btn-sm"
-                  >
-                    <i class="fa fa-trash"></i>
-                  </button>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-          <!-- /.card-body -->
-          <!-- /.card -->
-        </div>
-        <!-- Modal new -->
       </div>
-    </div>
-    <!-- Button trigger modal -->
-    <button type="button" class="btn btn-primary" @click="newModal()">Tambah Data</button>
-
-    <!-- Modal -->
-    <div
-      class="modal fade"
-      id="newModal"
-      tabindex="-1"
-      role="dialog"
-      aria-labelledby="addNew"
-      aria-hidden="true"
-    >
-      <div class="modal-dialog" role="document">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" v-show="!editmode" id="addNew">Data Produk Baru</h5>
-            <h5 class="modal-title" v-show="editmode" id="addNew">Ubah Data Produk</h5>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-              <span aria-hidden="true">&times;</span>
-            </button>
-          </div>
-          <form @submit.prevent="editmode ? updateProduk() : createProduk()">
-            <div class="modal-body">
-              <div class="form-group">
-                <label>Nama Produk</label>
-                <input
-                  v-model="form.nama_produk"
-                  type="text"
-                  name="nama_produk"
-                  placeholder="Masukan Nama Produk"
-                  class="form-control"
-                  :class="{ 'is-invalid': form.errors.has('nama_produk') }"
-                >
-                <has-error :form="form" field="nama_produk"></has-error>
-              </div>
-
-              <div class="form-group">
-                <label>Kategori</label>
-                <select
-                  v-model="form.id_jenisBarang"
-                  type="id_jenisBarang"
-                  name="id_jenisBarang"
-                  placeholder="Pilih Jenis barang"
-                  class="form-control"
-                  :class="{ 'is-invalid': form.errors.has('id_jenisBarang') }"
-                >
-                  <option value disabled selected>Pilih jenis barang</option>
-                  <option
-                    :value="jenis.id"
-                    v-for="jenis in jenisBarang"
-                    :key="jenis.id"
-                  >{{jenis.jenisBarang}}</option>
-                  <has-error :form="form" field="id_jenisBarang"></has-error>
-                </select>
-              </div>
-
-              <div class="form-group">
-                <label>Harga</label>
-                <input
-                  v-model="form.harga_produk"
-                  type="harga_produk"
-                  name="harga_produk"
-                  placeholder="Masukan Harga Produk"
-                  class="form-control"
-                  :class="{ 'is-invalid': form.errors.has('harga_produk') }"
-                >
-                <has-error :form="form" field="harga_produk"></has-error>
-              </div>
-            </div>
-
-            <div class="modal-footer">
-              <button type="button" class="btn btn-danger" data-dismiss="modal">Tutup</button>
-              <button v-show="editmode" type="submit" class="btn btn-success">Perbaru</button>
-              <button v-show="!editmode" type="submit" class="btn btn-success">Simpan</button>
-            </div>
-          </form>
-        </div>
-      </div>
-    </div>
+    </section>
   </div>
 </template>
 
@@ -165,7 +196,8 @@ export default {
         id: "",
         nama_produk: "",
         id_jenisBarang: "",
-        harga_produk: ""
+        harga_produk: "",
+        gambar_produk: ""
       })
     };
   },
@@ -196,6 +228,14 @@ export default {
         })
         .catch(() => {});
     },
+    getGambarProduk() {
+      let gambar_produk =
+        this.form.gambar_produk.length > 200
+          ? this.form.gambar_produk
+          : "img/product/" + this.form.gambar_produk;
+      return gambar_produk;
+    },
+
     newModal() {
       this.editmode = false;
       this.form.reset();
@@ -216,6 +256,23 @@ export default {
         .catch(() => {
           this.$Progress.fail();
         });
+    },
+    updateGambar(e) {
+      let file = e.target.files[0];
+      let reader = new FileReader();
+      let limit = 1024 * 1024 * 2;
+      if (file["size"] > limit) {
+        swal({
+          type: "error",
+          title: "Oops...",
+          text: "You are uploading a large file"
+        });
+        return false;
+      }
+      reader.onloadend = file => {
+        this.form.gambar_produk = reader.result;
+      };
+      reader.readAsDataURL(file);
     },
     editProduk(Produk) {
       this.editmode = true;

@@ -25,12 +25,18 @@ Route::apiResources([
     'jenis_barang' => 'jenisBarang_controller',
     'produk' => 'produk_controller',
     'detail_penjualan' => 'detail_penjualan_controller',
+    'penjualan' => 'penjualan_controller',
     'profile' => 'user_controller',
     'user' => 'user_controller',
-    
+    'tampil_detail_penjualan' => 'tambahpenjualan_controller',
+    'users' => 'user_controller'
 ]);
-Route::get('cariProduk' , 'detail_penjualan_controller@search');
-Route::get('profile' , 'user_controller@profile');
-Route::put('profile' , 'user_controller@updateProfile');
 
-
+Route::post('cart', 'tambahpenjualan_controller@addToCart');
+Route::get('cart', 'tambahpenjualan_controller@getCart');
+//Route::delete('cart/{id}', 'tambahpenjualan_controller@removeCart');
+Route::get('cariProduk', 'detail_penjualan_controller@search');
+Route::get('profile', 'user_controller@profile');
+Route::put('profile', 'user_controller@updateProfile');
+Route::get('lastId', 'tambahpenjualan_controller@loadLastransaction');
+Route::get('users', 'user_controller@findIt');

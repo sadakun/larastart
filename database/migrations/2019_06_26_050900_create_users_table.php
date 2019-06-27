@@ -22,6 +22,10 @@ class CreateUsersTable extends Migration {
 			$table->string('role', 191)->nullable();
 			$table->string('alamat', 191)->nullable();
 			$table->string('no_telp', 191)->nullable();
+			$table->string('jenis_kelamin', 191)->nullable();
+			$table->date('tgl_lahir')->nullable();
+			$table->string('tempat_lahir', 191)->nullable();
+			$table->string('agama', 191)->nullable();
 			$table->dateTime('email_verified_at')->nullable();
 			$table->string('password', 191);
 			$table->string('remember_token', 100)->nullable();

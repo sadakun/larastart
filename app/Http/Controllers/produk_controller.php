@@ -49,13 +49,14 @@ class produk_controller extends Controller
             'nama_produk' => 'required|string|max:191|unique:tbl_produks',
             'id_jenisBarang' => 'required|integer',
             'harga_produk' => 'required|integer'
-            
+
         ]);
-        
-            return tbl_produk::create([
+
+        return tbl_produk::create([
             'nama_produk' => $request['nama_produk'],
             'id_jenisBarang' => $request['id_jenisBarang'],
-            'harga_produk' => $request['harga_produk']
+            'harga_produk' => $request['harga_produk'],
+            'gambar_produk' => $request['gambar_produk'],
         ]);
     }
 
@@ -95,8 +96,20 @@ class produk_controller extends Controller
             'nama_produk' => 'required|string|max:191',
             'id_jenisBarang' => 'required|integer',
             'harga_produk' => 'required|integer'
-           
+
         ]);
+
+
+        $currentPhoto = $produk->gambar_produk;
+        if ($request->gambar_produk != $currentPhoto) {
+            $nama_produk = time() . '.' . explode('/', explode(':', substr($request->gambar_produk, 0, strpos($request->gambar_produk, ';')))[1])[1];
+            \Image::make($request->gambar_produk)->save(public_path('img/product/') . $nama_produk);
+            $request->merge(['gambar_produk' => $nama_produk]);
+            $gambarProduk = public_path('img/product/') . $currentPhoto;
+            if (file_exists($gambarProduk)) {
+                @unlink($gambarProduk);
+            }
+        }
         $produk->update($request->all());
         return ['message' => 'Updated produk'];
     }
